@@ -14,12 +14,18 @@ const maxAge = 14 * 24 * 60 * 60
 exports.handler = function(event, context, callback) {
   const key = event.queryStringParameters.key;
   const match = key.match(/(\d+|null)x(\d+|null)\/(.*)/);
-  const width = parseInt(match[1], 10);
-  const height = parseInt(match[2], 10);
+  var width = parseInt(match[1], 10);
+  var height = parseInt(match[2], 10);
   const originalKey = match[3];
+
+  if (isNaN(width)){ width = null }
+  if (isNaN(height)){ height = null }
 
   var format = match[3].split('.');
   format = format[format.length - 1];
+  if (format == 'jpg') {
+    format = 'jpeg';
+  }
 
   var contentType = 'image/jpeg';
   if(format == 'png') {
