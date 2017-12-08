@@ -9,11 +9,21 @@ const Sharp = require('sharp');
 const BUCKET = process.env.BUCKET;
 const URL = process.env.URL;
 
-const maxAge = 14 * 24 * 60 * 60
+const maxAge = 14 * 24 * 60 * 60;
 
 exports.handler = function(event, context, callback) {
   const key = event.queryStringParameters.key;
   const match = key.match(/(\d+|null)x(\d+|null)\/(.*)/);
+
+  if (match === null){
+    callback(null, {
+      statusCode: '404',
+      headers: {'location': `${URL}/${key}`},
+      body: '',
+    })
+    return false;
+  }
+
   var width = parseInt(match[1], 10);
   var height = parseInt(match[2], 10);
   const originalKey = match[3];
